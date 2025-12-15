@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=OpenVPN3 GUI
+Comment=OpenVPN3 desktop client
+Exec=openvpn_gui
+Icon=xyz.fonzi.openvpn3gui
+Terminal=false
+Categories=Network;Utility;
+StartupNotify=true

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>openvpn3-gui.desktop</id>
+  <name>OpenVPN3 GUI</name>
+  <summary>Modern OpenVPN 3 Linux GUI with live stats, tray, and notifications</summary>
+  <description>
+    <p>
+      OpenVPN3 GUI is a modern, user-friendly graphical interface for OpenVPN 3 Linux. It features live connection statistics, a decluttered network graph, session management, a system tray icon, desktop notifications, and a comprehensive log viewer. Designed for seamless integration with the COSMIC desktop and AppStream, it provides a polished VPN experience for Linux users.
+    </p>
+  </description>
+  <launchable type="desktop-id">openvpn3-gui.desktop</launchable>
+  <icon type="stock">openvpn3-gui</icon>
+  <categories>
+    <category>Network</category>
+    <category>Security</category>
+    <category>Utility</category>
+  </categories>
+  <keywords>
+    <keyword>VPN</keyword>
+    <keyword>OpenVPN</keyword>
+    <keyword>Network</keyword>
+    <keyword>Security</keyword>
+    <keyword>Tray</keyword>
+    <keyword>Linux</keyword>
+    <keyword>COSMIC</keyword>
+  </keywords>
+  <developer_name>Your Name or Organization</developer_name>
+  <url type="homepage">https://github.com/yourusername/openvpn-gui-rust</url>
+  <project_license>GPL-3.0-or-later</project_license>
+  <provides>
+    <binary>openvpn3-gui</binary>
+  </provides>
+  <releases>
+    <release version="1.0.0" date="2025-12-13">
+      <description>
+        <p>Initial release with full OpenVPN 3 Linux integration, live stats, tray icon, notifications, and AppStream support.</p>
+      </description>
+    </release>
+  </releases>
+</component>

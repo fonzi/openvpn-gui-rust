@@ -1,0 +1,31 @@
+[package]
+name = "openvpn_gui"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# GUI Library
+iced = { version = "0.14", features = ["canvas", "tokio", "advanced"] }
+
+# Async Runtime & Process Management
+tokio = { version = "1.37", features = ["process", "io-util", "time", "sync", "fs"] }
+
+# System Tray (Wayland/KDE compatible)
+ksni = { version = "0.3.2", features = ["blocking"] }
+image = "0.25"
+
+# Utilities
+chrono = "0.4"
+directories = "6.0.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+regex = "1.10"
+rfd = "0.16.0" # File dialogs
+url = "2.5"
+webbrowser = "1.0"
+circular-queue = "0.2.7" # For the graph data
+uuid = { version = "1.8.0", features = ["v4"] } # For session path generation
+reqwest = { version = "0.12.25", features = ["blocking"] } # For fetching public IP
+dirs = "6.0.0"
+notify-rust = "4.11.7"
+dark-light = "2.0.0"
