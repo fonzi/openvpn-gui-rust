@@ -7,6 +7,10 @@ A modern, lightweight GUI for OpenVPN3 built with Rust and the Iced framework.
 **Created by:** fonzi  
 **Website:** https://fonzi.xyz
 
+## Screenshot
+
+![OpenVPN3 GUI Screenshot](https://i.ibb.co/fYCBrNFZ/Screenshot-2025-12-14-20-52-44-Edit.png)
+
 ## Features
 
 ### Core Functionality
