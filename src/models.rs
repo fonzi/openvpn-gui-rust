@@ -66,5 +66,4 @@ pub enum Message {
 
     // Latency update
     LatencyChecked(Option<u32>),
-    SetTheme(Option<bool>), // None = system, Some(true) = dark, Some(false) = light
 }

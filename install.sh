@@ -6,7 +6,7 @@ set -e
 APP_ID="xyz.fonzi.openvpn3gui"
 BIN_NAME="openvpn_gui"
 BIN_PATH="$HOME/.local/bin/$BIN_NAME"
-DESKTOP_PATH="$HOME/.local/share/applications/openvpn3-gui.desktop"
+DESKTOP_PATH="$HOME/.local/share/applications/${APP_ID}.desktop"
 
 echo "Installing OpenVPN3 GUI (libcosmic)..."
 echo ""

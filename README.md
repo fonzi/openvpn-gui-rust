@@ -126,7 +126,7 @@ src/
 
 ## Known Bugs
 
-1. **Cosmic Dock Issue**: The icon/name will not show in the Cosmic dock unless the app is pinned from the apps menu first
+1. ~~**Cosmic Dock Issue**: The icon/name will not show in the Cosmic dock unless the app is pinned from the apps menu first~~ **FIXED**
 2. **Session State Persistence**: Opening and closing the app will cause it to forget which VPN sessions are active
 
 ## Contributing

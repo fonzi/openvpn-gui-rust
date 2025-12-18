@@ -1,26 +1,11 @@
 // Icon generation for system tray
 
-use image::{ImageBuffer, Rgba, RgbaImage};
-
 // Window icon creation removed - COSMIC handles window management
 
 /// Create a tray icon (32x32) for the system tray with connection status
 #[allow(dead_code)]
 pub fn create_tray_icon(_connected: bool) -> Vec<u8> {
     create_icon_rgba(32)
-}
-
-/// Create a tray icon image buffer for the tray-icon crate
-pub fn create_tray_icon_image(connected: bool) -> RgbaImage {
-    let size = 16; // Use 16x16 for tray icon
-    let mut img = ImageBuffer::new(size, size);
-    for y in 0..size {
-        for x in 0..size {
-            let pixel = create_pixel(x, y, size, connected);
-            img.put_pixel(x, y, Rgba(pixel));
-        }
-    }
-    img
 }
 
 /// Create the icon RGBA data

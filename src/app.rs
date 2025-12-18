@@ -98,7 +98,7 @@ impl Application for OpenVpnGui {
     type Executor = cosmic::executor::Default;
     type Flags = ();
     type Message = Message;
-    const APP_ID: &'static str = "com.openvpn.gui";
+    const APP_ID: &'static str = "xyz.fonzi.openvpn3gui";
 
     fn core(&self) -> &Core {
         &self.core
@@ -150,10 +150,6 @@ impl Application for OpenVpnGui {
             }
             Message::SaveSessionReport => self.handle_save_session_report(),
             Message::LatencyChecked(lat) => self.handle_latency_checked(lat),
-            Message::SetTheme(_mode) => {
-                // COSMIC handles themes automatically through system settings
-                Task::none()
-            }
         }
     }
 

@@ -2,7 +2,7 @@
 
 use circular_queue::CircularQueue;
 use plotters::prelude::*;
-use plotters_iced::{Chart, ChartBuilder, ChartWidget, DrawingBackend};
+use plotters_iced::{Chart, ChartBuilder, DrawingBackend};
 
 use crate::models::Message;
 

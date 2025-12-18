@@ -83,18 +83,31 @@ fn build_status_header(app: &OpenVpnGui) -> Element<'_, Message> {
         String::new()
     };
 
-    let row = row![
-        text("●").size(24),
-        text(format!("{:?}", app.state)).size(18),
-        text(duration_text)
-            .size(16),
-        Space::with_width(Length::Fill),
-        column![
-            text(format!("Tunnel IP: {}", app.tunnel_ip)).size(12),
-            text(format!("Public IP: {}", app.public_ip)).size(12),
-        ]
-        .spacing(2)
-    ]
+    // Create colored status display based on connection state
+    let row = match app.state {
+        ConnectionState::Connected => row![
+            cosmic::widget::text("●").size(24).class(cosmic::theme::Text::Accent),
+            cosmic::widget::text(format!("{:?}", app.state)).size(18).class(cosmic::theme::Text::Accent),
+            text(duration_text).size(16),
+            Space::with_width(Length::Fill),
+            column![
+                text(format!("Tunnel IP: {}", app.tunnel_ip)).size(12),
+                text(format!("Public IP: {}", app.public_ip)).size(12),
+            ]
+            .spacing(2)
+        ],
+        _ => row![
+            cosmic::widget::text("●").size(24).class(cosmic::theme::Text::Color(Color::from_rgb(0.5, 0.5, 0.5))),
+            cosmic::widget::text(format!("{:?}", app.state)).size(18).class(cosmic::theme::Text::Color(Color::from_rgb(0.5, 0.5, 0.5))),
+            text(duration_text).size(16),
+            Space::with_width(Length::Fill),
+            column![
+                text(format!("Tunnel IP: {}", app.tunnel_ip)).size(12),
+                text(format!("Public IP: {}", app.public_ip)).size(12),
+            ]
+            .spacing(2)
+        ],
+    }
     .spacing(10)
     .align_y(cosmic::iced::Alignment::Center);
 
