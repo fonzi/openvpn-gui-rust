@@ -7,4 +7,5 @@ Exec=openvpn_gui
 Icon=xyz.fonzi.openvpn3gui
 Terminal=false
 Categories=Network;Utility;
+StartupWMClass=xyz.fonzi.openvpn3gui
 StartupNotify=true
