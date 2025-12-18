@@ -1,5 +1,5 @@
 #!/bin/bash
-# Installation script for OpenVPN3 GUI
+# Installation script for OpenVPN3 GUI (libcosmic version)
 
 set -e
 
@@ -8,10 +8,14 @@ BIN_NAME="openvpn_gui"
 BIN_PATH="$HOME/.local/bin/$BIN_NAME"
 DESKTOP_PATH="$HOME/.local/share/applications/openvpn3-gui.desktop"
 
-echo "Installing OpenVPN3 GUI..."
+echo "Installing OpenVPN3 GUI (libcosmic)..."
+echo ""
+
+# Note: System dependencies check removed - cargo will fail with clear error if libs are missing
+# Required: libxkbcommon-dev libfontconfig-dev libfreetype-dev libexpat1-dev pkg-config
 
 # Build release version
-echo "Building release version..."
+echo "Building release version with libcosmic..."
 cargo build --release
 
 # Create directories if they don't exist
@@ -67,8 +71,15 @@ fi
 echo ""
 echo "Installation complete!"
 echo ""
+echo "OpenVPN3 GUI has been installed with libcosmic support."
+echo ""
 echo "You can now:"
 echo "  - Run 'openvpn_gui' from the terminal"
 echo "  - Find 'OpenVPN3 GUI' in your application menu"
+echo "  - Native COSMIC DE integration with automatic theme switching"
 echo ""
 echo "Note: Make sure ~/.local/bin is in your PATH"
+echo ""
+echo "For COSMIC Desktop users:"
+echo "  - The app will automatically match your system theme"
+echo "  - System tray icon available in the top panel"

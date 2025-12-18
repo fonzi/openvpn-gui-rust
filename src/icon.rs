@@ -1,13 +1,8 @@
-// Icon generation for window and system tray
+// Icon generation for system tray
 
-use iced::window;
 use image::{ImageBuffer, Rgba, RgbaImage};
 
-/// Create a window icon (32x32) with a VPN shield design
-pub fn create_window_icon() -> Option<window::Icon> {
-    let icon_data = create_icon_rgba(32);
-    window::icon::from_rgba(icon_data.clone(), 32, 32).ok()
-}
+// Window icon creation removed - COSMIC handles window management
 
 /// Create a tray icon (32x32) for the system tray with connection status
 #[allow(dead_code)]

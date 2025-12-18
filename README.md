@@ -2,14 +2,14 @@
 
 ## ⚠️ **EARLY ALPHA - UNDER ACTIVE DEVELOPMENT** ⚠️
 
-A modern, lightweight GUI for OpenVPN3 built with Rust and the Iced framework.
+A modern, lightweight GUI for OpenVPN3 built with Rust and the libcosmic framework, designed for seamless integration with COSMIC Desktop Environment.
 
 **Created by:** fonzi  
 **Website:** https://fonzi.xyz
 
 ## Screenshot
 
-![OpenVPN3 GUI Screenshot](Screenshot_2025-12-14_20-52-44%20(Edit).png)
+![OpenVPN3 GUI Screenshot](Screenshot.png)
 
 ## Features
 
@@ -23,18 +23,32 @@ A modern, lightweight GUI for OpenVPN3 built with Rust and the Iced framework.
 ### Additional Features
 - 💾 **Save Logs** - Export session logs to timestamped files
 - 🔄 **Auto-Reconnect** - Automatically reconnect on disconnect (optional)
-- 🔐 **2FA/Challenge Support** - Handle challenge-response authentication 
+- 🔐 **2FA/Challenge Support** - Handle challenge-response authentication
+- 🎨 **Native COSMIC Integration** - Built with libcosmic for perfect COSMIC DE integration
+- 🌓 **Automatic Theme Switching** - Follows system theme preferences
 
 ## Prerequisites
 
+- **COSMIC Desktop Environment** (recommended) or any Wayland/X11 environment
 - **OpenVPN3 Client** installed and configured
   ```bash
   sudo apt install openvpn3
   ```
-- **Rust** (1.90.0 or higher)
-- **Required system packages** for GUI development (Wayland/Cosmic):
+- **Rust** (1.70.0 or higher)
   ```bash
-  sudo apt install libxkbcommon-dev libwayland-dev libvulkan-dev libdbus-1-dev
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  ```
+- **Required system development libraries**:
+  ```bash
+  # On Ubuntu/Pop!_OS/Debian:
+  sudo apt install libxkbcommon-dev libfontconfig-dev libfreetype-dev libexpat1-dev pkg-config
+  
+  # These are required for building libcosmic applications
+  # - libxkbcommon-dev: Keyboard handling for Wayland
+  # - libfontconfig-dev: Font configuration
+  # - libfreetype-dev: Font rendering
+  # - libexpat1-dev: XML parsing
+  # - pkg-config: Build configuration tool
   ```
 
 ## Building

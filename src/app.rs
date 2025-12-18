@@ -1,6 +1,8 @@
 // Application state and business logic
 
-use iced::{time, Element, Subscription, Task, Theme};
+use cosmic::iced::Subscription;
+use cosmic::app::{Task, Core};
+use cosmic::{Application, Element};
 use std::time::{Duration, Instant};
 use circular_queue::CircularQueue;
 use notify_rust::Notification;
@@ -13,11 +15,11 @@ use crate::vpn::{
 };
 use crate::ui::{view_main, GRAPH_WINDOW};
 use crate::tray::SystemTray;
-use dark_light::Mode;
 use crate::vpn::health::ping_latency;
 
 /// The main application state
 pub struct OpenVpnGui {
+    pub core: Core,
     pub state: ConnectionState,
     pub config_path: Option<String>,
     pub session_path: Option<String>,
@@ -55,19 +57,10 @@ pub struct OpenVpnGui {
 
     // Latency (used for health and stats)
     pub latency_ms: Option<u32>,
-
-    // Theme mode: None = system, Some(true) = dark, Some(false) = light
-    pub theme_mode: Option<bool>,
 }
 
 impl Default for OpenVpnGui {
     fn default() -> Self {
-        Self::new().0
-    }
-}
-
-impl OpenVpnGui {
-    pub fn new() -> (Self, Task<Message>) {
         let mut q_in = CircularQueue::with_capacity(GRAPH_WINDOW);
         let mut q_out = CircularQueue::with_capacity(GRAPH_WINDOW);
         // Fill with zeros
@@ -76,57 +69,53 @@ impl OpenVpnGui {
             q_out.push(0.0); 
         }
         
-        // Initialize system tray in a separate thread
-        let tray = SystemTray::new().ok();
-
-        (
-            OpenVpnGui {
-                state: ConnectionState::Disconnected,
-                config_path: None,
-                session_path: None,
-                logs: vec!["Application started.".to_string()],
-                recent_configs: Self::load_recent_configs(),
-                stats: NetworkStats::default(),
-                graph_data_in: q_in,
-                graph_data_out: q_out,
-                show_graph: true,
-                connection_start: None,
-                tunnel_ip: "-".to_string(),
-                public_ip: "Checking...".to_string(),
-                auto_reconnect: false,
-                input_code: String::new(),
-                is_asking_2fa: false,
-                show_about: false,
-                tray,
-                session_list: None,
-                latency_ms: None,
-                theme_mode: None,
-            },
-            Task::none(),
-        )
-    }
-
-    pub fn title(&self) -> String {
-        String::from("OpenVPN3 Gui")
-    }
-
-    pub fn theme(&self) -> Theme {
-        match self.theme_mode {
-            Some(true) => Theme::Dark,
-            Some(false) => Theme::Light,
-            None => Theme::Dark, // Default to Dark (theme detection disabled due to async issues)
+        Self {
+            core: Core::default(),
+            state: ConnectionState::Disconnected,
+            config_path: None,
+            session_path: None,
+            logs: vec!["Application started.".to_string()],
+            recent_configs: Self::load_recent_configs(),
+            stats: NetworkStats::default(),
+            graph_data_in: q_in,
+            graph_data_out: q_out,
+            show_graph: true,
+            connection_start: None,
+            tunnel_ip: "-".to_string(),
+            public_ip: "Checking...".to_string(),
+            auto_reconnect: false,
+            input_code: String::new(),
+            is_asking_2fa: false,
+            show_about: false,
+            tray: SystemTray::new().ok(),
+            session_list: None,
+            latency_ms: None,
         }
     }
+}
 
-    pub fn toggle_theme(&mut self) {
-        self.theme_mode = match self.theme_mode {
-            None => Some(true),
-            Some(true) => Some(false),
-            Some(false) => None,
-        };
+impl Application for OpenVpnGui {
+    type Executor = cosmic::executor::Default;
+    type Flags = ();
+    type Message = Message;
+    const APP_ID: &'static str = "com.openvpn.gui";
+
+    fn core(&self) -> &Core {
+        &self.core
     }
 
-    pub fn update(&mut self, message: Message) -> Task<Message> {
+    fn core_mut(&mut self) -> &mut Core {
+        &mut self.core
+    }
+
+    fn init(core: Core, _flags: Self::Flags) -> (Self, Task<Self::Message>) {
+        let mut app = Self::default();
+        app.core = core;
+        
+        (app, Task::none())
+    }
+
+    fn update(&mut self, message: Self::Message) -> Task<Self::Message> {
         match message {
             Message::Tick(_) => self.handle_tick(),
             Message::BrowseConfig => self.handle_browse_config(),
@@ -149,7 +138,7 @@ impl OpenVpnGui {
             Message::ShowAbout => self.handle_show_about(),
             Message::CloseAbout => self.handle_close_about(),
             Message::ShowSessions => {
-                Task::perform(crate::vpn::manager::list_sessions(), Message::SessionsListed)
+                Task::perform(crate::vpn::manager::list_sessions(), |x| cosmic::Action::App(Message::SessionsListed(x)))
             }
             Message::SessionsListed(output) => {
                 self.session_list = Some(output);
@@ -161,21 +150,24 @@ impl OpenVpnGui {
             }
             Message::SaveSessionReport => self.handle_save_session_report(),
             Message::LatencyChecked(lat) => self.handle_latency_checked(lat),
-            Message::SetTheme(mode) => {
-                self.theme_mode = mode;
+            Message::SetTheme(_mode) => {
+                // COSMIC handles themes automatically through system settings
                 Task::none()
             }
         }
     }
 
-    pub fn subscription(&self) -> Subscription<Message> {
+    fn subscription(&self) -> Subscription<Self::Message> {
         // Run the tick every second
-        time::every(Duration::from_secs(1)).map(Message::Tick)
+        cosmic::iced::time::every(Duration::from_secs(1)).map(Message::Tick)
     }
 
-    pub fn view(&self) -> Element<'_, Message> {
+    fn view(&self) -> Element<'_, Self::Message> {
         view_main(self)
     }
+}
+
+impl OpenVpnGui {
 
     pub fn log(&mut self, msg: String) {
         let timestamp = chrono::Local::now().format("%H:%M:%S");
@@ -212,7 +204,7 @@ impl OpenVpnGui {
             if let Some(path) = &self.session_path {
                 cmds.push(Task::perform(
                     check_session_status(path.clone()), 
-                    Message::SessionStatusChecked
+                    |x| cosmic::Action::App(Message::SessionStatusChecked(x))
                 ));
             }
         }
@@ -222,28 +214,28 @@ impl OpenVpnGui {
             if let Some(path) = &self.session_path {
                 cmds.push(Task::perform(
                     fetch_session_stats(path.clone()), 
-                    Message::StatsUpdated
+                    |x| cosmic::Action::App(Message::StatsUpdated(x))
                 ));
             }
         }
 
         // 3. Check Tunnel IP occasionally
         if self.state == ConnectionState::Connected && self.tunnel_ip == "-" {
-            cmds.push(Task::perform(find_tunnel_ip(), Message::TunnelIpFound));
+            cmds.push(Task::perform(find_tunnel_ip(), |x| cosmic::Action::App(Message::TunnelIpFound(x))));
         }
         
         // 4. Check Public IP on startup or when connecting
         if self.public_ip == "Checking..." {
-            cmds.push(Task::perform(fetch_public_ip(), Message::PublicIpFound));
+            cmds.push(Task::perform(fetch_public_ip(), |x| cosmic::Action::App(Message::PublicIpFound(x))));
         }
 
         // 5. Ping for latency every tick (update live)
-        cmds.push(Task::perform(ping_latency(), Message::LatencyChecked));
+        cmds.push(Task::perform(ping_latency(), |x| cosmic::Action::App(Message::LatencyChecked(x))));
         Task::batch(cmds)
     }
 
     fn handle_browse_config(&mut self) -> Task<Message> {
-        Task::perform(pick_file(), Message::ConfigPathSelected)
+        Task::perform(pick_file(), |x| cosmic::Action::App(Message::ConfigPathSelected(x)))
     }
 
     fn handle_config_selected(&mut self, path_opt: Option<std::path::PathBuf>) -> Task<Message> {
@@ -262,7 +254,7 @@ impl OpenVpnGui {
                 if let Some(cfg) = self.config_path.clone() {
                     self.state = ConnectionState::Connecting;
                     self.log(format!("Starting VPN with {}", cfg));
-                    return Task::perform(start_vpn(cfg), Message::VpnStarted);
+                    return Task::perform(start_vpn(cfg), |x| cosmic::Action::App(Message::VpnStarted(x)));
                 } else {
                     self.log("No config selected.".to_string());
                 }
@@ -270,9 +262,9 @@ impl OpenVpnGui {
             ConnectionState::Connected | ConnectionState::Connecting => {
                 if let Some(path) = self.session_path.clone() {
                     self.log("Disconnecting...".to_string());
-                    return Task::perform(stop_vpn_by_path(path), Message::VpnStopped);
+                    return Task::perform(stop_vpn_by_path(path), |x| cosmic::Action::App(Message::VpnStopped(x)));
                 } else if let Some(cfg) = self.config_path.clone() {
-                    return Task::perform(stop_vpn_by_config(cfg), Message::VpnStopped);
+                    return Task::perform(stop_vpn_by_config(cfg), |x| cosmic::Action::App(Message::VpnStopped(x)));
                 }
             }
         }
@@ -381,8 +373,8 @@ impl OpenVpnGui {
                     .show();
                 // Also trigger IP checks
                 return Task::batch(vec![
-                    Task::perform(find_tunnel_ip(), Message::TunnelIpFound),
-                    Task::perform(fetch_public_ip(), Message::PublicIpFound),
+                    Task::perform(find_tunnel_ip(), |x| cosmic::Action::App(Message::TunnelIpFound(x))),
+                    Task::perform(fetch_public_ip(), |x| cosmic::Action::App(Message::PublicIpFound(x))),
                 ]);
             }
             
@@ -448,7 +440,7 @@ impl OpenVpnGui {
         if let Some(path) = self.session_path.clone() {
             let code_clone = self.input_code.clone();
             self.log(format!("Submitting challenge response: {}", code_clone));
-            Task::perform(submit_challenge(path, code_clone), Message::AuthCodeResult)
+            Task::perform(submit_challenge(path, code_clone), |x| cosmic::Action::App(Message::AuthCodeResult(x)))
         } else {
             Task::none()
         }

@@ -1,14 +1,14 @@
 #!/bin/bash
-# Uninstallation script for OpenVPN3 GUI
+# Uninstallation script for OpenVPN3 GUI (libcosmic version)
 
 set -e
 
 APP_ID="xyz.fonzi.openvpn3gui"
-BIN_NAME="openvpn3-gui"
+BIN_NAME="openvpn_gui"
 BIN_PATH="$HOME/.local/bin/$BIN_NAME"
-DESKTOP_PATH="$HOME/.local/share/applications/${BIN_NAME}.desktop"
+DESKTOP_PATH="$HOME/.local/share/applications/openvpn3-gui.desktop"
 
-echo "Uninstalling OpenVPN3 GUI..."
+echo "Uninstalling OpenVPN3 GUI (libcosmic)..."
 
 # Remove binary
 rm -f "$BIN_PATH" && echo "Removed binary $BIN_PATH"

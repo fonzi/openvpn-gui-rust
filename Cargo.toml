@@ -4,8 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# GUI Library
-iced = { version = "0.14", features = ["canvas", "tokio", "advanced"] }
+# GUI Library - Using libcosmic for COSMIC DE integration
+libcosmic = { git = "https://github.com/pop-os/libcosmic", features = ["tokio", "winit", "wgpu", "xdg-portal"] }
+
+# Plotters for graphs
+plotters = "0.3"
+plotters-iced = { git = "https://github.com/D-Brox/plotters-cosmic-iced.git" }
 
 # Async Runtime & Process Management
 tokio = { version = "1.37", features = ["process", "io-util", "time", "sync", "fs"] }
@@ -28,4 +32,4 @@ uuid = { version = "1.8.0", features = ["v4"] } # For session path generation
 reqwest = { version = "0.12.25", features = ["blocking"] } # For fetching public IP
 dirs = "6.0.0"
 notify-rust = "4.11.7"
-dark-light = "2.0.0"
+
