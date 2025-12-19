@@ -93,7 +93,7 @@ After installation, you can:
 2. **Start VPN**: Click "Start VPN" button
 3. **Authentication**: 
    - For SSO: A browser window will open automatically
-   - For 2FA: Enter your code in the orange banner that appears
+   - For 2FA: Enter your code in the orange banner that appears (Untested)
 4. **Monitor Connection**: Watch real-time stats and the network graph
 5. **System Tray**: The tray icon shows connection status (blue=disconnected, green=connected)
 6. **Disconnect**: Click "Disconnect" when done
