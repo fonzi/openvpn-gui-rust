@@ -23,7 +23,7 @@ A modern, lightweight GUI for OpenVPN3 built with Rust and the libcosmic framewo
 ### Additional Features
 - 💾 **Save Logs** - Export session logs to timestamped files
 - 🔄 **Auto-Reconnect** - Automatically reconnect on disconnect (optional)
-- 🔐 **2FA/Challenge Support** - Handle challenge-response authentication
+- 🔐 **2FA/Challenge Support** - Handle challenge-response authentication (untested)
 - 🎨 **Native COSMIC Integration** - Built with libcosmic for perfect COSMIC DE integration
 - 🌓 **Automatic Theme Switching** - Follows system theme preferences
 
